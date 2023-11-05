@@ -7,7 +7,7 @@ const database = path.join(__dirname, "/database", "adminDB.db");
 const db = new sqlite3.Database(database, (err) => {
   if (err) return err;
 });
-require('dotenv').config();
+require('dotenv').config()
 const Productsimg = "CREATE TABLE images (id INTEGER PRIMARY KEY AUTOINCREMENT,producto_id INTEGER NOT NULL,url TEXT NOT NULL,destacado BOOLEAN NOT NULL,FOREIGN KEY (producto_id) REFERENCES productos (id));"
 const CategoryProduct = "CREATE TABLE categorys (id INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT NOT NULL);";
 const Products = "CREATE TABLE products (id INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT NOT NULL,codigo TEXT NOT NULL,precio NUMERIC NOT NULL,software TEXT NOT NULL,pantalla TEXT NOT NULL,descripcion TEXT NOT NULL,categoria_id INTEGER NOT NULL,FOREIGN KEY (categoria_id) REFERENCES categorias (id))";
@@ -148,7 +148,7 @@ router.get('/',(req,res) => {
 
 router.post("/login",(req,res) => {
   const { user,password } = req.body;
-  if(user == process.env.USUARIO && password == process.env.CONTRASENA){
+  if(user == process.env.USER && password == process.env.USER_PASSWORD){
     res.redirect('/admin');
   }else{
     res.redirect('/')
