@@ -148,7 +148,7 @@ router.get('/',(req,res) => {
 
 router.post("/login",(req,res) => {
   const { user,password } = req.body;
-  if(user == process.env.USUARIO && password == process.env.CONTRASEÑA){
+  if(user == process.env.USUARIO && password == process.env.CONTRASENA){
     res.redirect('/admin');
   }else{
     res.redirect('/')
