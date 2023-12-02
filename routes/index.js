@@ -7,10 +7,10 @@ const database = path.join(__dirname, "/database", "adminDB.db");
 const db = new sqlite3.Database(database, (err) => {
   if (err) return err;
 });
-require('dotenv').config()
-const Productsimg = "CREATE TABLE images (id INTEGER PRIMARY KEY AUTOINCREMENT,producto_id INTEGER NOT NULL,url TEXT NOT NULL,destacado BOOLEAN NOT NULL,FOREIGN KEY (producto_id) REFERENCES productos (id));"
-const CategoryProduct = "CREATE TABLE categorys (id INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT NOT NULL);";
-const Products = "CREATE TABLE products (id INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT NOT NULL,codigo TEXT NOT NULL,precio NUMERIC NOT NULL,software TEXT NOT NULL,pantalla TEXT NOT NULL,descripcion TEXT NOT NULL,categoria_id INTEGER NOT NULL,FOREIGN KEY (categoria_id) REFERENCES categorias (id))";
+require('dotenv').config();
+const Productsimg = "CREATE TABLE imagenes (id INTEGER PRIMARY KEY AUTOINCREMENT,producto_id INTEGER NOT NULL,url TEXT NOT NULL,destacado BOOLEAN NOT NULL,FOREIGN KEY (producto_id) REFERENCES productos (id));"
+const CategoryProduct = "CREATE TABLE categorias (id INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT NOT NULL);";
+const Products = "CREATE TABLE produttos (id INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT NOT NULL,codigo TEXT NOT NULL,precio NUMERIC NOT NULL,software TEXT NOT NULL,pantalla TEXT NOT NULL,descripcion TEXT NOT NULL,categoria_id INTEGER NOT NULL,FOREIGN KEY (categoria_id) REFERENCES categorias (id))";
 
 db.run(CategoryProduct, (err) => {
   db.run(Productsimg, (err) => {
@@ -74,18 +74,18 @@ router.post("/addCategory", (req, res) => {
 
 
 
-router.get("/editCategory", (req,res) => {
-  db.all(`SELECT * FROM categorias`,[],(err,categoryView) => {
-    res.render('editCategory',{
-      Productcategory:categoryView
+router.get("/editCategory", (req, res) => {
+  db.all(`SELECT * FROM categorias`, [], (err, categoryView) => {
+    res.render('editCategory', {
+      Productcategory: categoryView
     })
   })
 })
 
 
-router.post("/editCategory/:id",(req,res) => {
+router.post("/editCategory/:id", (req, res) => {
   const { id } = req.params;
-  db.run(`UPDATE categorias SET nombre = ? WHERE id = ?`,[req.body.categoryProduct,id],(err) => {
+  db.run(`UPDATE categorias SET nombre = ? WHERE id = ?`, [req.body.categoryProduct, id], (err) => {
     err ? console.log(err) : res.redirect('/admin')
   })
 })
@@ -132,27 +132,103 @@ router.get('/editProduct/:id', (req, res) => {
   })
 })
 
-router.post('/editProduct/:id',(req,res) => {
+router.post('/editProduct/:id', (req, res) => {
   const { id } = req.params;
   const { name, code, price, software, screen, description, idCategory } = req.body;
   console.log(description)
   db.run(`UPDATE productos SET nombre = ?, codigo = ?, precio = ?, software = ?, pantalla = ?, descripcion = ?, categoria_id = ? WHERE (id = ?)`,
-  [name, code, price, software, screen, description, idCategory,id],(err) => {
-    err ? console.log(err):res.redirect('/admin');
+    [name, code, price, software, screen, description, idCategory, id], (err) => {
+      err ? console.log(err) : res.redirect('/admin');
+    })
+})
+
+
+router.get('/deleteProduct/:id',(req,res) => {
+  const { id } = req.params;
+  sqlQuery = "DELETE FROM productos WHERE id = ?";
+  db.run(sqlQuery,id,(err,prod) =>{
+    res.redirect('/admin')
   })
 })
 
-router.get('/',(req,res) => {
+router.get('/', (req, res) => {
   res.render('index.ejs')
 })
 
-router.post("/login",(req,res) => {
-  const { user,password } = req.body;
+
+
+router.get("/clientWeb", (req, res) => {
+  db.all(`SELECT * FROM productos`, [], (err, queryProduct) => {
+    db.all(`SELECT * FROM categorias`, [], (err, queryCategory) => {
+      db.all(`SELECT * FROM imagenes`, [], (err, queryImg) => {
+        res.render('clientWeb', {
+          Product: queryProduct,
+          Productcategory: queryCategory,
+          Productimg: queryImg
+        })
+      })
+    })
+  })
+})
+
+
+router.get('/clientWeb/:id', (req, res) => {
+  const { id } = req.params;
+  db.get(`SELECT * FROM productos WHERE id = ?`, [id], (err, queryProduct) => {
+    db.all(`SELECT * FROM categorias`, [], (err, queryCategory) => {
+      db.get(`SELECT * FROM imagenes WHERE producto_id = ?`, [id], (err, queryImg) => {
+        res.render('clientwebid', {
+          Product: queryProduct,
+          Productcategory: queryCategory,
+          Productimg: queryImg
+        })
+      })
+    })
+  })
+})
+
+
+
+router.get('/categoryid/:id', (req, res) => {
+  const { id } = req.params;
+  const sqlCategory = "SELECT * FROM categorias"
+  const sqlQuery = "SELECT productos.*, imagenes.url FROM productos LEFT JOIN imagenes ON productos.id = imagenes.producto_id WHERE productos.categoria_id = ?";
+  db.all(sqlQuery, id, (err, product) => {
+    db.all(sqlCategory, [], (err, category) => {
+      res.render('clientWeb', {
+        Product: product,
+        Productcategory: category,
+        Productimg: product
+      })
+    })
+  })
+})
+
+
+router.post('/filterid',(req,res) => {
+  const { name, procesador, software } = req.body;
+  const sqlQuery = "SELECT productos.*, imagenes.url FROM productos LEFT JOIN imagenes ON productos.id = imagenes.producto_id WHERE productos.nombre = ? OR productos.pantalla = ? OR productos.software = ?"
+  const sqlCategory = "SELECT * FROM categorias";
+  db.all(sqlQuery,[name,procesador,software],(err,product) => {
+    db.all(sqlCategory,[],(err,category) => {
+      res.render('clientweb',{
+        Product: product,
+        Productcategory: category,
+        Productimg: product
+      })
+    })
+  })
+})
+
+
+router.post("/login", (req, res) => {
+  const { user, password } = req.body;
   if(user == process.env.USER && password == process.env.USER_PASSWORD){
     res.redirect('/admin');
-  }else{
-    res.redirect('/')
+  } else {
+    res.redirect('/');
   }
 })
+
 
 module.exports = router;
