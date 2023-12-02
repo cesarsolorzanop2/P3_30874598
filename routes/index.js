@@ -10,7 +10,7 @@ const db = new sqlite3.Database(database, (err) => {
 require('dotenv').config();
 const Productsimg = "CREATE TABLE imagenes (id INTEGER PRIMARY KEY AUTOINCREMENT,producto_id INTEGER NOT NULL,url TEXT NOT NULL,destacado BOOLEAN NOT NULL,FOREIGN KEY (producto_id) REFERENCES productos (id));"
 const CategoryProduct = "CREATE TABLE categorias (id INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT NOT NULL);";
-const Products = "CREATE TABLE produttos (id INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT NOT NULL,codigo TEXT NOT NULL,precio NUMERIC NOT NULL,software TEXT NOT NULL,pantalla TEXT NOT NULL,descripcion TEXT NOT NULL,categoria_id INTEGER NOT NULL,FOREIGN KEY (categoria_id) REFERENCES categorias (id))";
+const Products = "CREATE TABLE productos (id INTEGER PRIMARY KEY AUTOINCREMENT,nombre TEXT NOT NULL,codigo TEXT NOT NULL,precio NUMERIC NOT NULL,software TEXT NOT NULL,pantalla TEXT NOT NULL,descripcion TEXT NOT NULL,categoria_id INTEGER NOT NULL,FOREIGN KEY (categoria_id) REFERENCES categorias (id))";
 
 db.run(CategoryProduct, (err) => {
   db.run(Productsimg, (err) => {
