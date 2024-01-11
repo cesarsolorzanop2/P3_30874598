@@ -12,7 +12,10 @@
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
+    "node-fetch": "^3.3.2",
+    "promisify": "^0.0.3",
     "sqlite3": "^5.1.6"
   }
 }

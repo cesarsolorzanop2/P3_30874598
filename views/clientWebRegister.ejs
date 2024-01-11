@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+      <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+    <style>
+        
+    </style>
+<body>
+
+    <div class="f" style="margin-top: 15%;">
+        <form action="/clientWebRegister" method="POST" style="background-color: rgb(255, 255, 255); padding: 1rem; border-radius: 10px;">
+            <div class="mb-3">
+              <label for="exampleInputUsuario1" class="form-label">Usuario</label>
+              <input type="text" name="user" class="form-control" id="exampleInputUsuario1"  required>
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+              <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputNombreCliente1" class="form-label">Nombre</label>
+              <input type="text" name="nombrecliente" class="form-control" id="exampleInputNombreCliente1">
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputDireccion" class="form-label">Dirección</label>
+              <input type="text" name="direccion" class="form-control" id="exampleInputDireccion1">
+            </div>
+            <a href="/clientWebLogin">¿Tienes cuenta?</a>
+            <div class="g-recaptcha" data-sitekey="<%= recaptcha%>"></div>
+                <br/>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+          </form>
+        </div>
+    
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+
+</html>
